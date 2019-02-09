@@ -5,17 +5,8 @@ class comp
 {
 	public static void main( String[] args )throws ParseException, Exception
 	{
-		try
-		{		
-     		comp analizador = new comp( System.in ) ;
-			analizador.Programa();
-			System.out.println("\tAnalizador ha terminado.");			
-		}
-		catch(ParseException e)
-		{
-			System.out.println(e.getMessage());
-			System.out.println("\tAnalizador ha terminado.");
-		}
+		Ventana ven = new Ventana("Compilador");	
+		
 	}
 }
 PARSER_END(comp)

@@ -4,17 +4,8 @@ import java.io.*;
 class comp implements compConstants {
         public static void main( String[] args )throws ParseException, Exception
         {
-                try
-                {
-                comp analizador = new comp( System.in ) ;
-                        analizador.Programa();
-                        System.out.println("\u005ctAnalizador ha terminado.");
-                }
-                catch(ParseException e)
-                {
-                        System.out.println(e.getMessage());
-                        System.out.println("\u005ctAnalizador ha terminado.");
-                }
+                Ventana ven = new Ventana("Compilador");
+
         }
 
   static final public void Programa() throws ParseException {

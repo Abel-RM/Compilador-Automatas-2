@@ -4,6 +4,9 @@ import java.awt.Color;
 import java.awt.TextArea;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -11,7 +14,11 @@ import javax.swing.JTextArea;
 
 public class Ventana extends JFrame {
 	static TextArea t1;
+	static JTextArea t2;
+	static comp analizador;
 	public Ventana(String title) {
+		InputStream stream = new ByteArrayInputStream( "".getBytes(StandardCharsets.UTF_8));
+		analizador = new comp(stream) ;
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.setTitle(title);
 		this.setLayout(null);
@@ -42,11 +49,12 @@ public class Ventana extends JFrame {
 		this.add(btn1);		
 		this.add(btn2);
 		this.add(btn3);
-		JTextArea t2 = new JTextArea();
+		t2 = new JTextArea();
 		t2.setSize(780, 205);	
 		t2.setLocation(5, 355);			
 		t2.setEditable(false);
 		t2.setBackground(Color.WHITE);		
+		t2.setForeground(Color.RED);
 		this.add(t2);
 		this.repaint();
 		
@@ -66,9 +74,25 @@ public class Ventana extends JFrame {
 
 	}
 	class Correr implements ActionListener {	
-		public void actionPerformed(ActionEvent arg0) {
-			
+		public void actionPerformed(ActionEvent arg0) {			
+			iniciar();			
 			
 		}		
+	}
+	static void iniciar(){
+		try
+		{		
+			String g=t1.getText();
+			InputStream stream = new ByteArrayInputStream( g.getBytes(StandardCharsets.UTF_8));
+			analizador.ReInit(stream);     		
+			analizador.Programa();
+					
+		}
+		catch(ParseException e)
+		{
+			t2.setText(e.getMessage()+"\n"+"\tAnalizador ha terminado.");
+			System.out.println(e.getMessage());
+			System.out.println("\tAnalizador ha terminado.");
+		}
 	}
 }
