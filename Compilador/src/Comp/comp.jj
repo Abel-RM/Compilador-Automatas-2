@@ -3,9 +3,17 @@ package Comp;
 import java.io.*;
 class comp 
 {
+	static String nombre;
+	static String tipo;
+	static String atributo;
 	public static void main( String[] args )throws ParseException, Exception
 	{
-		Ventana ven = new Ventana("Compilador");	
+		try{
+			Ventana ven = new Ventana("Compilador");	
+		}catch(Exception e){
+			Ventana.t2.setText(e.getMessage());
+		}
+		
 		
 	}
 }
@@ -46,14 +54,23 @@ SKIP :
 	" "|"\n" | "\r" | "\r\n" | "\t"
 }
 void Programa() :
-{}
 {
+	
+}
+{	
 	modifi()
+	({atributo=token.image;})
 	<clase>
+	({tipo=token.image;})
 	<IDENTIFIER>
+	({nombre=token.image;})
+	({Simbolo n  = new Simbolo(nombre,tipo,atributo);})
+	({Ventana.tabla.put(nombre,n);})
+	
+	
 	<Izq>		
-	field_declaration()
-	if_statement()	
+	(field_declaration())*
+	(if_statement()	)*
 	<Der>	
 }
 void modifi() :
@@ -65,14 +82,23 @@ void field_declaration():
 {}
 {
 	variable_declaration()
-	<SEMICOLON>	
+	
 }
 void variable_declaration():
-{}
+{	
+}
 {
-modifi()
-type()
-variable_declarator()				
+	modifi()
+	({atributo=token.image;})
+	type()
+	({tipo=token.image;})
+	variable_declarator()	
+	
+
+	({Simbolo n  = new Simbolo(nombre,tipo,atributo);})
+	({Ventana.tabla.put(nombre,n);})	
+
+		
 }
 void type():
 {}
@@ -82,15 +108,17 @@ void type():
 void variable_declarator():
 {}
 {
-	<IDENTIFIER>
-	<Asignacion>
-	tipo()
+	identi()
+	({nombre=token.image;})
+	(<SEMICOLON>|(<Asignacion> tipo()))
+	
 		
 }
 void tipo():
 {}
 {
 	(<Int>|<True>|<False>)
+	<SEMICOLON>	
 	
 }
 void expression():
@@ -109,7 +137,7 @@ void testing_expression():
 void or():
 {}
 {		
-	(<Int>|<IDENTIFIER>)
+	(<Int>|identi())
 }
 void type_specifier():
 {}
@@ -136,7 +164,7 @@ void statement_block():
 {
 	
 		 <Izq>	
-	aritmetica_expression()	
+		(aritmetica_expression())*
 		 <Der>
 	
 	 
@@ -146,15 +174,29 @@ void aritmetica_expression():
 {	
 		identi()
 		<Asignacion>
-		(<Int>|identi())
-		(<Mas>|<Menos>)
-		(<Int>|identi())
+		opint()
 		<SEMICOLON>			 
 }
 void identi():
 {}
+{	
+	<IDENTIFIER>	
+			 		 
+}
+void opint():
+{}
 {
-		<IDENTIFIER>	 		 
+		(<Int>|identi())
+		(<Mas>|<Menos>)
+		(<Int>|identi())
+}
+void asignation():
+{}
+{		
+	identi()
+	<Asignacion>
+	(<Int>|<True>|<False>)
+	<SEMICOLON>	
 }
 
 
