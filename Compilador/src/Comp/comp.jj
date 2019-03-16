@@ -6,6 +6,8 @@ class comp
 	static String nombre;
 	static String tipo;
 	static String atributo;
+	static String valor;
+	static String posicion;
 	public static void main( String[] args )throws ParseException, Exception
 	{
 		try{
@@ -64,7 +66,7 @@ void Programa() :
 	({tipo=token.image;})
 	<IDENTIFIER>
 	({nombre=token.image;})
-	({Simbolo n  = new Simbolo(nombre,tipo,atributo);})
+	({Simbolo n  = new Simbolo(nombre,tipo,atributo,valor,posicion);})
 	({Ventana.tabla.put(nombre,n);})
 	
 	
@@ -93,9 +95,7 @@ void variable_declaration():
 	type()
 	({tipo=token.image;})
 	variable_declarator()	
-	
-
-	({Simbolo n  = new Simbolo(nombre,tipo,atributo);})
+	({Simbolo n  = new Simbolo(nombre,tipo,atributo,valor,posicion);})
 	({Ventana.tabla.put(nombre,n);})	
 
 		
@@ -110,17 +110,19 @@ void variable_declarator():
 {
 	identi()
 	({nombre=token.image;})
-	(<SEMICOLON>|(<Asignacion> tipo()))
+	(<SEMICOLON>|(<Asignacion> 
+
+
+	(<Int>|<True>|<False>)
+	({valor=token.image;})
+	<SEMICOLON>	
+
+
+	))
 	
 		
 }
-void tipo():
-{}
-{
-	(<Int>|<True>|<False>)
-	<SEMICOLON>	
-	
-}
+
 void expression():
 {}
 {

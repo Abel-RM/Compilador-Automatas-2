@@ -61,10 +61,16 @@ public class Ventana extends JFrame {
 		btn3.setLocation(600, 180);
 		Font fuente=new Font("Dialog", Font.ROMAN_BASELINE, 18);
 		t1.setFont(fuente);
+		JButton btn4= new JButton("Tabla");
+		Tabla tabla = new Tabla();
+		btn4.addActionListener(tabla);
+		btn4.setSize(120, 60);
+		btn4.setLocation(600, 260);
 		this.add(t1);
 		this.add(btn1);		
 		this.add(btn2);
 		this.add(btn3);
+		this.add(btn4);
 		t2 = new TextArea();
 		Font fuente2=new Font("Dialog", Font.ITALIC, 16);
 		t2.setFont(fuente2);		
@@ -116,8 +122,7 @@ public class Ventana extends JFrame {
                  catch(Exception es)
                  {}           	            	  
            	  
-             }
-		     		
+             }		     		
 			
 		}
 
@@ -132,15 +137,23 @@ public class Ventana extends JFrame {
 				t2.setText(e.getMessage());
 			}
 			Enumeration<Simbolo> enumeration = tabla.elements();
-			Simbolo s= new Simbolo(null,null,null);	
+			Simbolo s= new Simbolo();	
 			t2.setText(t2.getText()+"\n\n\nTabla de Simbolos:\n<symbol name,  type,  attribute>\n\n");
 			while (enumeration.hasMoreElements()) {
 				s=enumeration.nextElement();
-				t2.setText(t2.getText()+"<"+s.getNombre()+"\t"+s.getTipo()+"\t"+s.getAtributo()+">\n");
+				t2.setText(t2.getText()+"<"+s.getNombre()+"\t"+s.getTipo()+"\t"+s.getAtributo()+"\t"+s.getValor()+"\t"+s.getPosicion()+">\n");
 			}
-						
+					
 			
 		}		
+	}
+	
+	class Tabla implements ActionListener{	
+		public void actionPerformed(ActionEvent arg0) {			
+		
+			
+		}
+		
 	}
 	static void iniciar(){
 		try
