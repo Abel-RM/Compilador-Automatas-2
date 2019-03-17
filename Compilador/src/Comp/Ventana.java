@@ -26,10 +26,14 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class Ventana extends JFrame {
 	static Hashtable<String, Simbolo> tabla;
+	static String[] tokens;
+	static int col=0;
+	static int ren=0;
 	static TextArea t1;
 	static TextArea t2;
 	static comp analizador;
 	public Ventana(String title) {	
+		tokens= new String[500];
 		tabla= new Hashtable();
 		InputStream stream = new ByteArrayInputStream( "".getBytes(StandardCharsets.UTF_8));
 		analizador = new comp(stream) ;
@@ -83,6 +87,20 @@ public class Ventana extends JFrame {
 		this.repaint();
 		
 	}
+	public static Simbolo buscar(String tok) {
+		int x=0;
+		String res=" ";		
+		for (int i = 0; i < tokens.length; i++) {			
+			x = tokens[i].indexOf(tok);
+			//System.out.println(Ventana.tokens[i]);
+			if (x!=-1) {
+			res="Linea " +String.valueOf(i+1)+", Colubna"+String.valueOf(x);
+				return new Simbolo(null,null,null,null,res);
+			}
+			
+		}
+		return new Simbolo(null,null,null,null,null);
+	}
 	class Borrar implements ActionListener{	
 		public void actionPerformed(ActionEvent arg0) {			
 			t1.setText(null);
@@ -99,9 +117,9 @@ public class Ventana extends JFrame {
 			
 			 File rut=new File("C:\\Users\\Abel RM\\Desktop\\tec\\GitHub\\Compilador\\Compilador\\src\\Comp");
 			 chooser.setCurrentDirectory(rut);
-       	  chooser.setFileSelectionMode( JFileChooser.FILES_ONLY );        	  
-             FileNameExtensionFilter filtro = new FileNameExtensionFilter( ".java","java" ); 
-             chooser.setFileFilter( filtro );
+       	 // chooser.setFileSelectionMode( JFileChooser.FILES_ONLY );        	  
+           //  FileNameExtensionFilter filtro = new FileNameExtensionFilter( ".java","java" ); 
+            // chooser.setFileFilter( filtro );
              int estado=chooser.showOpenDialog(null);
             String cadena=" ";            
              if(estado==JFileChooser.APPROVE_OPTION)
@@ -129,6 +147,7 @@ public class Ventana extends JFrame {
 	}
 	class Correr implements ActionListener {	
 		public void actionPerformed(ActionEvent arg0) {	
+						
 			t2.setText(null);
 			tabla.clear();
 			try {

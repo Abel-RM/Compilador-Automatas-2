@@ -8,6 +8,7 @@ class comp
 	static String atributo;
 	static String valor;
 	static String posicion;
+	static Simbolo s = new Simbolo();
 	public static void main( String[] args )throws ParseException, Exception
 	{
 		try{
@@ -61,15 +62,8 @@ void Programa() :
 }
 {	
 	modifi()
-	({atributo=token.image;})
 	<clase>
-	({tipo=token.image;})
-	<IDENTIFIER>
-	({nombre=token.image;})
-	({Simbolo n  = new Simbolo(nombre,tipo,atributo,valor,posicion);})
-	({Ventana.tabla.put(nombre,n);})
-	
-	
+	<IDENTIFIER>	
 	<Izq>		
 	(field_declaration())*
 	(if_statement()	)*
@@ -95,7 +89,9 @@ void variable_declaration():
 	type()
 	({tipo=token.image;})
 	variable_declarator()	
-	({Simbolo n  = new Simbolo(nombre,tipo,atributo,valor,posicion);})
+	({
+	String g=s.getPosicion();
+	Simbolo n  = new Simbolo(nombre,tipo,atributo,valor,g);})
 	({Ventana.tabla.put(nombre,n);})	
 
 		
@@ -109,7 +105,10 @@ void variable_declarator():
 {}
 {
 	identi()
-	({nombre=token.image;})
+	({nombre=token.image;
+	s=Ventana.buscar(nombre);
+	System.out.println(s.getNombre());
+	})
 	(<SEMICOLON>|(<Asignacion> 
 
 

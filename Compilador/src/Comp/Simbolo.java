@@ -20,6 +20,7 @@ public class Simbolo {
 		this.posicion = posicion;
 	}
 	
+	
 	public String getNombre() {
 		return nombre;
 	}

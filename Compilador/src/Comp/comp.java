@@ -7,6 +7,7 @@ class comp implements compConstants {
         static String atributo;
         static String valor;
         static String posicion;
+        static Simbolo s = new Simbolo();
         public static void main( String[] args )throws ParseException, Exception
         {
                 try{
@@ -20,13 +21,8 @@ class comp implements compConstants {
 
   static final public void Programa() throws ParseException {
     modifi();
-          atributo=token.image;
     jj_consume_token(clase);
-          tipo=token.image;
     jj_consume_token(IDENTIFIER);
-          nombre=token.image;
-          Simbolo n  = new Simbolo(nombre,tipo,atributo,valor,posicion);
-          Ventana.tabla.put(nombre,n);
     jj_consume_token(Izq);
     label_1:
     while (true) {
@@ -81,7 +77,8 @@ class comp implements compConstants {
     type();
           tipo=token.image;
     variable_declarator();
-          Simbolo n  = new Simbolo(nombre,tipo,atributo,valor,posicion);
+        String g=s.getPosicion();
+        Simbolo n  = new Simbolo(nombre,tipo,atributo,valor,g);
           Ventana.tabla.put(nombre,n);
   }
 
@@ -92,6 +89,8 @@ class comp implements compConstants {
   static final public void variable_declarator() throws ParseException {
     identi();
           nombre=token.image;
+        s=Ventana.buscar(nombre);
+        System.out.println(s.getNombre());
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case SEMICOLON:
       jj_consume_token(SEMICOLON);
