@@ -94,7 +94,7 @@ public class Ventana extends JFrame {
 			x = tokens[i].indexOf(tok);
 			//System.out.println(Ventana.tokens[i]);
 			if (x!=-1) {
-			res="Linea " +String.valueOf(i+1)+", Colubna"+String.valueOf(x);
+			res="Linea " +String.valueOf(++i)+", Colubna"+String.valueOf(++x);
 				return new Simbolo(null,null,null,null,res);
 			}
 			
@@ -147,7 +147,7 @@ public class Ventana extends JFrame {
 	}
 	class Correr implements ActionListener {	
 		public void actionPerformed(ActionEvent arg0) {	
-						
+			tokens=t1.getText().split("\n");
 			t2.setText(null);
 			tabla.clear();
 			try {
