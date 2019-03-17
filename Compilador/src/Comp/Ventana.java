@@ -14,6 +14,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.regex.Pattern;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -88,18 +89,20 @@ public class Ventana extends JFrame {
 		
 	}
 	public static Simbolo buscar(String tok) {
+		String regexp = "^(.)*"+tok+"(\\s)*(=|;)(.)*$";		
 		int x=0;
-		String res=" ";		
-		for (int i = 0; i < tokens.length; i++) {			
-			x = tokens[i].indexOf(tok);
-			//System.out.println(Ventana.tokens[i]);
-			if (x!=-1) {
-			res="Linea " +String.valueOf(++i)+", Colubna"+String.valueOf(++x);
-				return new Simbolo(null,null,null,null,res);
+		String res=" ";	
+		for (int i = 0; i < tokens.length; i++) {				
+			if (Pattern.matches(regexp, tokens[i])) {				
+				x = tokens[i].indexOf(tok);			
+				if (x!=-1) {
+				res="Linea " +String.valueOf(++i)+", Colubna "+String.valueOf(++x);
+					return new Simbolo(null,null,null,null,res);
+				}						
 			}
-			
+				
 		}
-		return new Simbolo(null,null,null,null,null);
+		return new Simbolo(null,null,null,null,null);	
 	}
 	class Borrar implements ActionListener{	
 		public void actionPerformed(ActionEvent arg0) {			

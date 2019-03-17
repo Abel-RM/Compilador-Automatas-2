@@ -46,10 +46,19 @@ TOKEN:
 	| <False: "false"> //18
 	| <True: "true">//19
 	| <integer : "int"> //20
+	| <Dou : "double"> //28
+	| <St : "String"> //29
+	| <Ch : "char"> //30
 	| <If : "if"> //21
 	| <Boolean : "boolean"> //22
 	| <Int : (["0"-"9"])+>//23
-	| <IDENTIFIER : ["a"-"z","A"-"Z"](["a"-"z","A"-"Z","_"])*> //24
+	| <UNKNOWN : (("'"|"\"")(["a"-"z","A"-"Z","_","0"-"9"])+)|((["a"-"z","A"-"Z","_","0"-"9"])+)("'"|"\"") > //24
+	| <IDENTIFIER : (["a"-"z","A"-"Z","_","0"-"9"])+ > //24
+	| <Char : "'"["a"-"z","A"-"Z","0"-"9"]"'" >//52 
+	| <String : ["\""]["a"-"z","A"-"Z","0"-"9"," "](["a"-"z","A"-"Z","0"-"9"," ",":",";","."])*["\""]> //51
+	| <Double : (["0"-"9"])+["."](["0"-"9"])+ > //50	
+	
+
 }
 
 SKIP : 
@@ -90,11 +99,9 @@ void variable_declaration():
 	({tipo=token.image;})
 	variable_declarator()	
 	({
-	String g=s.getPosicion();
+	String g=s.getPosicion();	
 	Simbolo n  = new Simbolo(nombre,tipo,atributo,valor,g);})
-	({Ventana.tabla.put(nombre,n);})	
-
-		
+	({Ventana.tabla.put(nombre,n);})			
 }
 void type():
 {}
@@ -106,13 +113,12 @@ void variable_declarator():
 {
 	identi()
 	({nombre=token.image;
-	s=Ventana.buscar(nombre);
-	System.out.println(s.getNombre());
+	s=Ventana.buscar(nombre);	
 	})
-	(<SEMICOLON>|(<Asignacion> 
-
-
-	(<Int>|<True>|<False>)
+	(<SEMICOLON>
+	({valor="undefined";})
+	|(<Asignacion> 
+	(<Int>|<True>|<False>|<String>|<Char>|<Double>)
 	({valor=token.image;})
 	<SEMICOLON>	
 
@@ -143,7 +149,7 @@ void or():
 void type_specifier():
 {}
 {		
-	(<Boolean>|<integer>)
+	(<Boolean>|<integer>|<Dou>|<St>|<Ch>)
 }
 void if_statement():
 {}

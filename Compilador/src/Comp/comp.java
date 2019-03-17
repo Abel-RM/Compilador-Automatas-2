@@ -90,10 +90,10 @@ class comp implements compConstants {
     identi();
           nombre=token.image;
         s=Ventana.buscar(nombre);
-        System.out.println(s.getNombre());
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case SEMICOLON:
       jj_consume_token(SEMICOLON);
+          valor="undefined";
       break;
     case Asignacion:
       jj_consume_token(Asignacion);
@@ -106,6 +106,15 @@ class comp implements compConstants {
         break;
       case False:
         jj_consume_token(False);
+        break;
+      case String:
+        jj_consume_token(String);
+        break;
+      case Char:
+        jj_consume_token(Char);
+        break;
+      case Double:
+        jj_consume_token(Double);
         break;
       default:
         jj_la1[3] = jj_gen;
@@ -177,6 +186,15 @@ class comp implements compConstants {
       break;
     case integer:
       jj_consume_token(integer);
+      break;
+    case Dou:
+      jj_consume_token(Dou);
+      break;
+    case St:
+      jj_consume_token(St);
+      break;
+    case Ch:
+      jj_consume_token(Ch);
       break;
     default:
       jj_la1[7] = jj_gen;
@@ -297,11 +315,16 @@ class comp implements compConstants {
   static private int jj_gen;
   static final private int[] jj_la1 = new int[13];
   static private int[] jj_la1_0;
+  static private int[] jj_la1_1;
   static {
       jj_la1_init_0();
+      jj_la1_init_1();
    }
    private static void jj_la1_init_0() {
-      jj_la1_0 = new int[] {0x28000,0x200000,0x28000,0x8c0000,0x4080,0x7e,0x1800000,0x500000,0x1000000,0x1800000,0x300,0x1800000,0x8c0000,};
+      jj_la1_0 = new int[] {0x28000,0x1000000,0x28000,0xe40c0000,0x4080,0x7e,0x14000000,0x2f00000,0x10000000,0x14000000,0x300,0x14000000,0x40c0000,};
+   }
+   private static void jj_la1_init_1() {
+      jj_la1_1 = new int[] {0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,};
    }
 
   /** Constructor with InputStream. */
@@ -439,7 +462,7 @@ class comp implements compConstants {
   /** Generate ParseException. */
   static public ParseException generateParseException() {
     jj_expentries.clear();
-    boolean[] la1tokens = new boolean[30];
+    boolean[] la1tokens = new boolean[37];
     if (jj_kind >= 0) {
       la1tokens[jj_kind] = true;
       jj_kind = -1;
@@ -450,10 +473,13 @@ class comp implements compConstants {
           if ((jj_la1_0[i] & (1<<j)) != 0) {
             la1tokens[j] = true;
           }
+          if ((jj_la1_1[i] & (1<<j)) != 0) {
+            la1tokens[32+j] = true;
+          }
         }
       }
     }
-    for (int i = 0; i < 30; i++) {
+    for (int i = 0; i < 37; i++) {
       if (la1tokens[i]) {
         jj_expentry = new int[1];
         jj_expentry[0] = i;
