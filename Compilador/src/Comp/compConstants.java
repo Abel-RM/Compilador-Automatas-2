@@ -45,33 +45,31 @@ public interface compConstants {
   /** RegularExpression Id. */
   int PRIVATE = 17;
   /** RegularExpression Id. */
-  int False = 18;
+  int Bool = 18;
   /** RegularExpression Id. */
-  int True = 19;
+  int integer = 19;
   /** RegularExpression Id. */
-  int integer = 20;
+  int Dou = 20;
   /** RegularExpression Id. */
-  int Dou = 21;
+  int St = 21;
   /** RegularExpression Id. */
-  int St = 22;
+  int Ch = 22;
   /** RegularExpression Id. */
-  int Ch = 23;
+  int If = 23;
   /** RegularExpression Id. */
-  int If = 24;
+  int Boolean = 24;
   /** RegularExpression Id. */
-  int Boolean = 25;
+  int Int = 25;
   /** RegularExpression Id. */
-  int Int = 26;
+  int UNKNOWN = 26;
   /** RegularExpression Id. */
-  int UNKNOWN = 27;
+  int IDENTIFIER = 27;
   /** RegularExpression Id. */
-  int IDENTIFIER = 28;
+  int Char = 28;
   /** RegularExpression Id. */
-  int Char = 29;
+  int String = 29;
   /** RegularExpression Id. */
-  int String = 30;
-  /** RegularExpression Id. */
-  int Double = 31;
+  int Double = 30;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -96,8 +94,7 @@ public interface compConstants {
     "\"public\"",
     "\"class\"",
     "\"private\"",
-    "\"false\"",
-    "\"true\"",
+    "<Bool>",
     "\"int\"",
     "\"double\"",
     "\"String\"",

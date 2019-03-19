@@ -42,9 +42,8 @@ TOKEN:
 	| <SEMICOLON: ";" >//14
 	| <PUBLIC: "public">//15
 	| <clase: "class">//16
-	| <PRIVATE: "private"> //17
-	| <False: "false"> //18
-	| <True: "true">//19
+	| <PRIVATE: "private"> //17	
+	| <Bool : ("true"|"false")> //22
 	| <integer : "int"> //20
 	| <Dou : "double"> //28
 	| <St : "String"> //29
@@ -95,22 +94,7 @@ void variable_declaration():
 {
 	modifi()
 	({atributo=token.image;})
-	type()
-	({tipo=token.image;})
-	variable_declarator()	
-	({
-	String g=s.getPosicion();	
-	Simbolo n  = new Simbolo(nombre,tipo,atributo,valor,g);})
-	({Ventana.tabla.put(nombre,n);})			
-}
-void type():
-{}
-{	
-	type_specifier()					
-}
-void variable_declarator():
-{}
-{
+	((<Boolean>
 	identi()
 	({nombre=token.image;
 	s=Ventana.buscar(nombre);	
@@ -118,15 +102,116 @@ void variable_declarator():
 	(<SEMICOLON>
 	({valor="undefined";})
 	|(<Asignacion> 
-	(<Int>|<True>|<False>|<String>|<Char>|<Double>)
+	<Bool>
 	({valor=token.image;})
 	<SEMICOLON>	
 
 
 	))
-	
+
+	)
+	|(<integer>
+
+	identi()
+	({nombre=token.image;
+	s=Ventana.buscar(nombre);	
+	})
+	(<SEMICOLON>
+	({valor="undefined";})
+	|(<Asignacion> 
+	<Int>
+	({valor=token.image;})
+	<SEMICOLON>	
+
+
+	))
+
+
+	)|(<Dou>
+
+	identi()
+	({nombre=token.image;
+	s=Ventana.buscar(nombre);	
+	})
+	(<SEMICOLON>
+	({valor="undefined";})
+	|(<Asignacion> 
+	<Double>	
+	({valor=token.image;})
+	<SEMICOLON>	
+
+
+	))
+
+
+
+	)|(<St>
+
+	identi()
+	({nombre=token.image;
+	s=Ventana.buscar(nombre);	
+	})
+	(<SEMICOLON>
+	({valor="undefined";})
+	|(<Asignacion> 
+	<String>
+	({valor=token.image;})
+	<SEMICOLON>	
+
+
+	))
+
+
+
+
+
+
+	)|(<Ch>
+
+	identi()
+	({nombre=token.image;
+	s=Ventana.buscar(nombre);	
+	})
+	(<SEMICOLON>
+	({valor="undefined";})
+	|(<Asignacion> 
+	(<Char>)
+	({valor=token.image;})
+	<SEMICOLON>	
+
+
+	))
+
+
+	))
+	({tipo=token.image;})
+
+
+
+
+
+
+	({
+	String g=s.getPosicion();		
+	Simbolo n  = new Simbolo(nombre,tipo,atributo,valor,g);})
+	({
+	String pos=Ventana.buscarDuplicados(nombre);
+	if(Ventana.repetido){
+		Ventana.repetido=false;
+		Ventana.dup = "\n\n\n\nerror: variable "+nombre +" is already defined at "+pos+"\n"+"the first declaration was at "+g;
+	}
+		Ventana.tabla.put(nombre,n);
 		
+	
+	
+	})			
 }
+void type():
+{}
+{	
+	type_specifier()					
+}
+
 
 void expression():
 {}
@@ -202,7 +287,7 @@ void asignation():
 {		
 	identi()
 	<Asignacion>
-	(<Int>|<True>|<False>)
+	(<Int>|<Bool>)
 	<SEMICOLON>	
 }
 

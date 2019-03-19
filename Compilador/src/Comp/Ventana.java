@@ -26,6 +26,8 @@ import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class Ventana extends JFrame {
+	static String dup=" ";
+	static boolean repetido=false;
 	static Hashtable<String, Simbolo> tabla;
 	static String[] tokens;
 	static int col=0;
@@ -33,7 +35,8 @@ public class Ventana extends JFrame {
 	static TextArea t1;
 	static TextArea t2;
 	static comp analizador;
-	public Ventana(String title) {	
+	static int con=0;
+	public Ventana(String title) {		
 		tokens= new String[500];
 		tabla= new Hashtable();
 		InputStream stream = new ByteArrayInputStream( "".getBytes(StandardCharsets.UTF_8));
@@ -89,26 +92,54 @@ public class Ventana extends JFrame {
 		
 	}
 	public static Simbolo buscar(String tok) {
-		String regexp = "^(.)*"+tok+"(\\s)*(=|;)(.)*$";		
+		String regexp = "^(.)+(int|String|char|boolean|double)(.)*"+tok+"(\\s)*(=|;)(.)*$";		
 		int x=0;
-		String res=" ";	
+		String r=" ";	
 		for (int i = 0; i < tokens.length; i++) {				
 			if (Pattern.matches(regexp, tokens[i])) {				
 				x = tokens[i].indexOf(tok);			
 				if (x!=-1) {
-				res="Linea " +String.valueOf(++i)+", Colubna "+String.valueOf(++x);
-					return new Simbolo(null,null,null,null,res);
+					con=i;
+					r="Line " +String.valueOf(++i)+", Column "+String.valueOf(++x);
+					return new Simbolo(null,null,null,null,r);
 				}						
 			}
 				
 		}
 		return new Simbolo(null,null,null,null,null);	
 	}
+	
+	public static String buscarDuplicados(String tok) {		
+		String res=" ";
+		int contador=0;
+		String regexp = "^(.)+(int|String|char|boolean|double)(.)*"+tok+"(\\s)*(=|;)(.)*$";		
+		int x=0;
+		buscar(tok);
+		for (int i = 0; i < tokens.length; i++) {				
+			if (Pattern.matches(regexp, tokens[i])) {
+				contador++;
+				x = tokens[i].indexOf(tok);			
+				if (x!=-1&&(con!=i)) {
+					res ="Line " +String.valueOf(++i)+", Column "+String.valueOf(++x);					
+				}
+				if (contador>1) {
+					repetido=true;					
+				}
+			}
+				
+		}
+		con=0;		
+		return res;
+			
+	}
+	
+	
 	class Borrar implements ActionListener{	
 		public void actionPerformed(ActionEvent arg0) {			
 			t1.setText(null);
 			t2.setText(null);
 			tabla.clear();
+			dup=" ";
 			
 		}
 		
@@ -153,16 +184,20 @@ public class Ventana extends JFrame {
 			tokens=t1.getText().split("\n");
 			t2.setText(null);
 			tabla.clear();
+			dup=" ";
 			try {
 				iniciar();
-			} catch (Exception e) {
+			} catch (Exception e) {  
 				t2.setText(e.getMessage());
 			}
+						
+			t2.setText(t2.getText()+dup);
 			Enumeration<Simbolo> enumeration = tabla.elements();
 			Simbolo s= new Simbolo();	
-			t2.setText(t2.getText()+"\n\n\nTabla de Simbolos:\n<symbol name,  type,  attribute>\n\n");
+			t2.setText(t2.getText()+"\n\n\nTabla de Simbolos:\n<symbol name,  type,  attribute>\n\n");			
 			while (enumeration.hasMoreElements()) {
 				s=enumeration.nextElement();
+				
 				t2.setText(t2.getText()+"<"+s.getNombre()+"\t"+s.getTipo()+"\t"+s.getAtributo()+"\t"+s.getValor()+"\t"+s.getPosicion()+">\n");
 			}
 					
