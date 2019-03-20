@@ -51,7 +51,7 @@ TOKEN:
 	| <If : "if"> //21
 	| <Boolean : "boolean"> //22
 	| <Int : (["0"-"9"])+>//23
-	| <UNKNOWN : (("'"|"\"")(["a"-"z","A"-"Z","_","0"-"9"])+)|((["a"-"z","A"-"Z","_","0"-"9"])+)("'"|"\"") > //24
+	| <UNKNOWN : ((("'"|"\"")(["a"-"z","A"-"Z","_","0"-"9"])+)|((["a"-"z","A"-"Z","_","0"-"9"])+)("'"|"\""))|("/"|"*") > //24
 	| <IDENTIFIER : (["a"-"z","A"-"Z","_","0"-"9"])+ > //24
 	| <Char : "'"["a"-"z","A"-"Z","0"-"9"]"'" >//52 
 	| <String : ["\""]["a"-"z","A"-"Z","0"-"9"," "](["a"-"z","A"-"Z","0"-"9"," ",":",";","."])*["\""]> //51
@@ -95,6 +95,7 @@ void variable_declaration():
 	modifi()
 	({atributo=token.image;})
 	((<Boolean>
+	({tipo=token.image;})
 	identi()
 	({nombre=token.image;
 	s=Ventana.buscar(nombre);	
@@ -111,7 +112,7 @@ void variable_declaration():
 
 	)
 	|(<integer>
-
+	({tipo=token.image;})
 	identi()
 	({nombre=token.image;
 	s=Ventana.buscar(nombre);	
@@ -128,7 +129,7 @@ void variable_declaration():
 
 
 	)|(<Dou>
-
+	({tipo=token.image;})
 	identi()
 	({nombre=token.image;
 	s=Ventana.buscar(nombre);	
@@ -146,7 +147,7 @@ void variable_declaration():
 
 
 	)|(<St>
-
+	({tipo=token.image;})
 	identi()
 	({nombre=token.image;
 	s=Ventana.buscar(nombre);	
@@ -167,7 +168,7 @@ void variable_declaration():
 
 
 	)|(<Ch>
-
+	({tipo=token.image;})
 	identi()
 	({nombre=token.image;
 	s=Ventana.buscar(nombre);	
@@ -184,7 +185,7 @@ void variable_declaration():
 
 
 	))
-	({tipo=token.image;})
+	
 
 
 
@@ -198,7 +199,7 @@ void variable_declaration():
 	String pos=Ventana.buscarDuplicados(nombre);
 	if(Ventana.repetido){
 		Ventana.repetido=false;
-		Ventana.dup = "\n\n\n\nerror: variable "+nombre +" is already defined at "+pos+"\n"+"the first declaration was at "+g;
+		Ventana.dup = "\n\n\n\nerror: variable "+nombre +" is already defined at "+pos+",\n"+"the first declaration was at "+g;
 	}
 		Ventana.tabla.put(nombre,n);
 		
@@ -265,6 +266,13 @@ void aritmetica_expression():
 {}
 {	
 		identi()
+		({			
+			if(!Ventana.tabla.containsKey(token.image)){	
+				Simbolo k = new Simbolo();
+				k=Ventana.buscarNoDec(token.image);
+				Ventana.noDeclarada +="error: variable  "+token.image+" at "+k.getPosicion()+" was not declarated\n";
+			}
+		})
 		<Asignacion>
 		opint()
 		<SEMICOLON>			 
@@ -278,9 +286,27 @@ void identi():
 void opint():
 {}
 {
-		(<Int>|identi())
+		(<Int>|identi()
+		({			
+			if(!Ventana.tabla.containsKey(token.image)){			
+				Simbolo k = new Simbolo();
+				k=Ventana.buscarNoDecNum(token.image);
+				Ventana.noDeclarada +="error: variable  "+token.image+" at "+k.getPosicion()+" was not declarated\n";				
+			}
+		})
+		)
+		
 		(<Mas>|<Menos>)
-		(<Int>|identi())
+		(<Int>|identi()
+		({			
+			if(!Ventana.tabla.containsKey(token.image)){				
+				Simbolo k = new Simbolo();
+				k=Ventana.buscarNoDecNumD(token.image);
+				Ventana.noDeclarada +="error: variable  "+token.image+" at "+k.getPosicion()+" was not declarated\n";
+			}
+		})
+		)
+
 }
 void asignation():
 {}

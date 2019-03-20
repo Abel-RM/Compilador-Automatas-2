@@ -77,6 +77,7 @@ class comp implements compConstants {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case Boolean:
       jj_consume_token(Boolean);
+          tipo=token.image;
       identi();
           nombre=token.image;
         s=Ventana.buscar(nombre);
@@ -99,6 +100,7 @@ class comp implements compConstants {
       break;
     case integer:
       jj_consume_token(integer);
+          tipo=token.image;
       identi();
           nombre=token.image;
         s=Ventana.buscar(nombre);
@@ -121,6 +123,7 @@ class comp implements compConstants {
       break;
     case Dou:
       jj_consume_token(Dou);
+          tipo=token.image;
       identi();
           nombre=token.image;
         s=Ventana.buscar(nombre);
@@ -143,6 +146,7 @@ class comp implements compConstants {
       break;
     case St:
       jj_consume_token(St);
+          tipo=token.image;
       identi();
           nombre=token.image;
         s=Ventana.buscar(nombre);
@@ -165,6 +169,7 @@ class comp implements compConstants {
       break;
     case Ch:
       jj_consume_token(Ch);
+          tipo=token.image;
       identi();
           nombre=token.image;
         s=Ventana.buscar(nombre);
@@ -190,13 +195,12 @@ class comp implements compConstants {
       jj_consume_token(-1);
       throw new ParseException();
     }
-          tipo=token.image;
         String g=s.getPosicion();
         Simbolo n  = new Simbolo(nombre,tipo,atributo,valor,g);
         String pos=Ventana.buscarDuplicados(nombre);
         if(Ventana.repetido){
                 Ventana.repetido=false;
-                Ventana.dup = "\u005cn\u005cn\u005cn\u005cnerror: variable "+nombre +" is already defined at "+pos+"\u005cn"+"the first declaration was at "+g;
+                Ventana.dup = "\u005cn\u005cn\u005cn\u005cnerror: variable "+nombre +" is already defined at "+pos+",\u005cn"+"the first declaration was at "+g;
         }
                 Ventana.tabla.put(nombre,n);
   }
@@ -308,6 +312,11 @@ class comp implements compConstants {
 
   static final public void aritmetica_expression() throws ParseException {
     identi();
+                        if(!Ventana.tabla.containsKey(token.image)){
+                                Simbolo k = new Simbolo();
+                                k=Ventana.buscarNoDec(token.image);
+                                Ventana.noDeclarada +="error: variable  "+token.image+" at "+k.getPosicion()+" was not declarated\u005cn";
+                        }
     jj_consume_token(Asignacion);
     opint();
     jj_consume_token(SEMICOLON);
@@ -324,6 +333,11 @@ class comp implements compConstants {
       break;
     case IDENTIFIER:
       identi();
+                        if(!Ventana.tabla.containsKey(token.image)){
+                                Simbolo k = new Simbolo();
+                                k=Ventana.buscarNoDecNum(token.image);
+                                Ventana.noDeclarada +="error: variable  "+token.image+" at "+k.getPosicion()+" was not declarated\u005cn";
+                        }
       break;
     default:
       jj_la1[13] = jj_gen;
@@ -348,6 +362,11 @@ class comp implements compConstants {
       break;
     case IDENTIFIER:
       identi();
+                        if(!Ventana.tabla.containsKey(token.image)){
+                                Simbolo k = new Simbolo();
+                                k=Ventana.buscarNoDecNumD(token.image);
+                                Ventana.noDeclarada +="error: variable  "+token.image+" at "+k.getPosicion()+" was not declarated\u005cn";
+                        }
       break;
     default:
       jj_la1[15] = jj_gen;
