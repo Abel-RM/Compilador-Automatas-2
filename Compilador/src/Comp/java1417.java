@@ -30,7 +30,7 @@ class java1417 extends JPanel {
     tabla.setShowHorizontalLines( false );
     tabla.setRowSelectionAllowed( true );
     tabla.setColumnSelectionAllowed( true );
-    Font fuente2=new Font("Dialog", Font.ITALIC, 16);
+    Font fuente2=new Font("Dialog", Font.PLAIN, 16);
     tabla.setFont(fuente2);
     // Cambiamos el color de la zona seleccionada (rojo/blanco)
     tabla.setSelectionForeground( Color.white );

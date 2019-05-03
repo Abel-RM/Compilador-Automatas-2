@@ -1,0 +1,277 @@
+package Analizadores;
+
+import java_cup.runtime.*;
+import java.io.*;
+import java.util.ArrayList;
+import arboles.nodo;
+parser code
+{:
+/**Metodo al que se llama automaticamente ante algun error sintactico.*/
+public void syntax_error(Symbol s){
+    System.out.println("Error Sintactico -> lexema: " +s.value+" Linea: " +s.right+ " Columna: "+s.left);
+}
+
+/**Metodo al que se llama en el momento en que ya no es posible una recuperacion de errores.*/
+public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception{
+    System.out.println("Error Sintactico No Recuperable-> Lexema: " +s.value+" Linea: "+s.right+ " Columna: "+s.left);
+}
+
+:}
+action code
+{:
+//Lista
+ArrayList<nodo> lista = new ArrayList(); 
+//    
+
+String Fichero_Sintactico = "Sintactico.txt";
+String Fichero_Expresion = "expresion.txt";
+File Sintactico = new File(Fichero_Sintactico);
+File Expresion = new File(Fichero_Expresion);
+
+//Variables a manejar
+int contador=0;
+int contador2=0;
+int pos=0;
+int eaux=0;
+int tpaux=0;
+int epaux=0;
+int tactual=0;
+int eactual=0;
+int factual=0;
+int tpactual=0;
+int epactual=0;
+arboles.nodo auxiliar;
+
+//Para escribir archivo de arbol sintactico..
+public void escribir(String mensaje){
+			try{
+			  BufferedWriter bw =  new BufferedWriter(new FileWriter(Sintactico, true));  
+                          bw.write(mensaje);			  
+			  bw.close();
+			} catch (IOException ioe){
+				ioe.printStackTrace();
+}
+}
+
+public void escribir2(String mensaje){
+			try{
+			  BufferedWriter bw =  new BufferedWriter(new FileWriter(Expresion, true));
+                          bw.write(mensaje);			  
+			  bw.close();
+			} catch (IOException ioe){
+				ioe.printStackTrace();
+}
+}
+
+public void Preparar(File Archivo){
+    if(Archivo.exists()){
+        Archivo.delete();
+    }
+}
+
+//Creacion de metodos y funciones..
+boolean Verificar(String posible){
+if(lista.get(0).getValor().equals(posible)){
+lista.remove(0);
+return true;
+}
+return false;
+}
+
+arboles.nodo ObtenerNumero(){
+String valor=lista.get(0).getValor();
+    if(Verificar("(")){
+    arboles.nodo x = ObtenerSuma();
+    Verificar(")");
+    return null;
+    }
+    else{
+    try{
+        double y = Double.parseDouble( valor );
+        arboles.nodo aux = lista.remove(0);        
+        return aux;
+    }
+    catch( NumberFormatException err ){
+        return null;
+    }
+}
+}
+
+arboles.nodo ObtenerProducto(){
+arboles.nodo a = ObtenerNumero();
+auxiliar=lista.get(0);
+if (Verificar("*")){
+arboles.nodo b = ObtenerNumero();
+escribir2("\"node"+ (a.getContador()) +"\" -- \"node"+ (auxiliar.getContador()) + "\";\n");
+escribir2("\"node"+ (b.getContador()) +"\" -- \"node"+ (auxiliar.getContador()) + "\";\n");
+System.out.println("Se imprime * de " + a.getValor() + " con " + b.getValor());
+return null;
+}
+else{
+    return a;
+}
+}
+
+arboles.nodo ObtenerSuma(){
+arboles.nodo a = ObtenerProducto();
+if (Verificar("+")){
+System.out.println("Se realiza suma");
+arboles.nodo b = ObtenerSuma();
+return null;
+}
+else{
+    return a;
+}
+}
+
+
+:}
+/*Declaracion de simbolos terminales*/
+terminal String SUM, MIN, MUL, DIV, IGL, iden, Numero, PA, PC;
+
+/*Declaracion de simbolos NO terminales*/
+non terminal S,E, T, EP, TP, F;
+
+/*Inicio de la gramatica*/
+start with S;
+
+S::= {: Preparar(Sintactico);  Preparar(Expresion);
+        ////////////////////////////BLOQUE DE SINTACTICO////////////////////////////
+        escribir("graph G {\n node [shape = circle fixedsize=true, width=0.9];\n"); 
+        //escribir("size=\"8,5\"");
+        escribir("node" + contador +" [ label = S];\n"); contador++;
+        escribir("node"+contador+" [ label= E];\n");  eactual=contador; eaux=contador;
+        escribir("\"node"+ 0 +"\" -- \"node"+ eactual + "\";\n");
+        contador++; 
+        ///////////////////////////BLOQUE DE EXPRESIONES////////////////////////////
+        escribir2("graph G {\n node [shape = circle fixedsize=true, width=0.9];\n");                 
+        :} 
+E {:    ////////////////////////////BLOQUE DE SINTACTICO////////////////////////////
+        escribir("label=\"ARBOL SINTACTICO\"\n fontsize=25;");
+        escribir("}");
+        ///////////////////////////BLOQUE DE EXPRESIONES////////////////////////////
+        try{
+        ObtenerSuma();
+        }
+        catch(Exception ex){
+        System.out.println("Error");
+        }        
+        escribir2("label=\"ARBOL DE EXPRESIONES\"\n fontsize=25;");                
+        escribir2("}");                
+     :};
+
+E::= {: ////////////////////////////BLOQUE DE SINTACTICO////////////////////////////                
+        escribir("node"+contador+" [ label= T];\n"); tactual=contador;
+        escribir("\"node"+ eactual +"\" -- \"node"+ contador + "\";\n"); contador++;
+        escribir("node"+contador+" [ label= EP];\n"); epactual=contador; 
+        escribir("\"node"+ eactual +"\" -- \"node"+ contador + "\";\n"); contador++;
+        :} 
+T EP;
+
+EP::= {: 
+         ////////////////////////////BLOQUE DE SINTACTICO//////////////////////////// 
+         escribir("node"+contador+" [ label= \"+\"];\n"); 
+         escribir("\"node"+ epactual +"\" -- \"node"+ (contador) + "\";\n"); contador++;
+         escribir("node"+ contador +" [ label= T];\n"); 
+         escribir("\"node"+ epactual +"\" -- \"node"+ (contador) + "\";\n"); tactual=contador; contador++;
+         escribir("node"+contador+" [ label= EP];\n");
+         escribir("\"node"+ epactual +"\" -- \"node"+ (contador) + "\";\n"); epactual=contador; contador++; 
+         ///////////////////////////BLOQUE DE EXPRESIONES////////////////////////////
+         escribir2("node"+contador2+" [ label= \"+\"];\n"); 
+         arboles.nodo nuevo= new arboles.nodo("+",contador2);               
+         lista.add(nuevo);
+         //escribir2("\"node"+ (contador2-1) +"\" -- \"node"+ (contador2) + "\";\n"); 
+         contador2++;
+         :} 
+SUM T EP
+    | {: ////////////////////////////BLOQUE DE SINTACTICO//////////////////////////// 
+         escribir("node"+contador+" [ label= \"-\"];\n"); 
+         escribir("\"node"+ epactual +"\" -- \"node"+ (contador) + "\";\n"); contador++;
+         escribir("node"+contador+" [ label= T];\n");
+         escribir("\"node"+ epactual +"\" -- \"node"+ (contador) + "\";\n"); tactual=contador; contador++;
+         escribir("node"+contador+" [ label= EP];\n");
+         escribir("\"node"+ epactual +"\" -- \"node"+ (contador) + "\";\n"); epactual=contador; contador++; 
+         ///////////////////////////BLOQUE DE EXPRESIONES////////////////////////////
+         escribir2("node"+contador2+" [ label= \"-\"];\n"); 
+         arboles.nodo nuevo= new arboles.nodo("-",contador2);                 
+         lista.add(nuevo);
+         //escribir2("\"node"+ (contador2-1) +"\" -- \"node"+ (contador2) + "\";\n"); 
+         contador2++;
+         :} 
+MIN T EP
+    | {: 
+         ////////////////////////////BLOQUE DE SINTACTICO//////////////////////////// 
+         escribir("node"+contador+" [ label= Epsilon];\n");          
+         escribir("\"node"+ epactual + "\" -- \"node"+ contador + "\";\n"); contador++;  :};                      
+
+T::= {: 
+        ////////////////////////////BLOQUE DE SINTACTICO//////////////////////////// 
+         escribir("node"+contador+" [ label= F];\n");
+         escribir("\"node"+ tactual +"\" -- \"node"+ (contador) + "\";\n"); factual=contador; contador++;
+         escribir("node"+contador+" [ label= TP];\n");
+         escribir("\"node"+ tactual +"\" -- \"node"+ (contador) + "\";\n"); tpactual=contador; contador++; :}
+F TP;
+
+TP::= {: ////////////////////////////BLOQUE DE SINTACTICO//////////////////////////// 
+         escribir("node"+contador+" [ label= \"*\"];\n");
+         escribir("\"node"+ tpactual +"\" -- \"node"+ (contador) + "\";\n"); contador++;
+         escribir("node"+contador+" [ label= F];\n");
+         escribir("\"node"+ tpactual +"\" -- \"node"+ (contador) + "\";\n"); factual=contador; contador++; 
+         escribir("node"+contador+" [ label= TP];\n");
+         escribir("\"node"+ tpactual +"\" -- \"node"+ (contador) + "\";\n"); tpactual=contador; contador++; 
+         ///////////////////////////BLOQUE DE EXPRESIONES////////////////////////////
+         escribir2("node"+contador2+" [ label= \"*\"];\n");         
+         arboles.nodo nuevo= new arboles.nodo("*",contador2);                 
+         lista.add(nuevo);
+         //escribir2("\"node"+ (contador2-1) +"\" -- \"node"+ (contador2) + "\";\n"); 
+         contador2++;
+         :}
+         MUL F TP
+    | {: ////////////////////////////BLOQUE DE SINTACTICO//////////////////////////// 
+         escribir("node"+contador+" [ label= \"/\"];\n");
+         escribir("\"node"+ tpactual +"\" -- \"node"+ (contador) + "\";\n"); contador++;
+         escribir("node"+contador+" [ label= F];\n");
+         escribir("\"node"+ tpactual +"\" -- \"node"+ (contador) + "\";\n"); factual=contador; contador++; 
+         escribir("node"+contador+" [ label= TP];\n");
+         escribir("\"node"+ tpactual +"\" -- \"node"+ (contador) + "\";\n"); tpactual=contador; contador++;
+         ///////////////////////////BLOQUE DE EXPRESIONES////////////////////////////
+         escribir2("node"+contador2+" [ label= \"/\"];\n");
+         arboles.nodo nuevo= new arboles.nodo("/",contador2);                 
+         lista.add(nuevo);
+         //escribir2("\"node"+ (contador2-1) +"\" -- \"node"+ (contador2) + "\";\n"); 
+         contador2++;
+         :}
+        DIV  F TP
+    | {: 
+         //Creacion de nodo         
+         escribir("node"+contador+" [ label= Epsilon];\n");          
+         escribir("\"node"+ tpactual + "\" -- \"node"+ contador + "\";\n"); contador++;  :};                      
+
+F::= {: 
+         escribir("node"+contador+" [ label= \"(\"];\n");
+         escribir("\"node"+ factual +"\" -- \"node"+ (contador) + "\";\n"); contador++;
+         escribir("node"+contador+" [ label= E];\n");
+         escribir("\"node"+ factual +"\" -- \"node"+ (contador) + "\";\n"); eactual=contador; contador++; 
+         escribir("node"+contador+" [ label= \")\"];\n");
+         escribir("\"node"+ factual +"\" -- \"node"+ (contador) + "\";\n");  contador++; 
+         ///////////////////////////BLOQUE DE EXPRESIONES////////////////////////////         
+         arboles.nodo nuevo= new arboles.nodo("(",contador2);
+         lista.add(nuevo);    contador2++;     
+:}
+         PA {: /*PARA USO OPTIMO IMPLEMENTAR UNA PILA.. */
+         tpaux=tpactual; epaux=epactual;                   
+         :} E {: tpactual=tpaux; epactual=epaux;   eactual=eaux; :} PC {: arboles.nodo nuevo2= new arboles.nodo(")",contador2);
+         lista.add(nuevo2);     contador2++;    :}
+    | {: 
+        ////////////////////////////BLOQUE DE SINTACTICO////////////////////////////
+         escribir("node"+contador+" [ label= Numero];\n");
+         escribir("\"node"+ factual +"\" -- \"node"+ (contador) + "\";\n"); contador++; :}
+         Numero:v {: 
+         escribir("node"+contador+" [ label= " + v + "];\n"); 
+         escribir("\"node"+ (contador-1) +"\" -- \"node"+ (contador) + "\";\n");  contador++; 
+         ///////////////////////////BLOQUE DE EXPRESIONES////////////////////////////         
+         escribir2("node"+contador2+" [ label= " + v + "];\n"); 
+         arboles.nodo nuevo= new arboles.nodo(("" + v) ,contador2);         
+         lista.add(nuevo);         
+         contador2++;
+:};

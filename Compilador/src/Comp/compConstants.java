@@ -29,47 +29,51 @@ public interface compConstants {
   /** RegularExpression Id. */
   int Menos = 9;
   /** RegularExpression Id. */
-  int ParAP = 10;
+  int Mul = 10;
   /** RegularExpression Id. */
-  int ParCi = 11;
+  int Div = 11;
   /** RegularExpression Id. */
-  int Izq = 12;
+  int ParAP = 12;
   /** RegularExpression Id. */
-  int Der = 13;
+  int ParCi = 13;
   /** RegularExpression Id. */
-  int SEMICOLON = 14;
+  int Izq = 14;
   /** RegularExpression Id. */
-  int PUBLIC = 15;
+  int Der = 15;
   /** RegularExpression Id. */
-  int clase = 16;
+  int SEMICOLON = 16;
   /** RegularExpression Id. */
-  int PRIVATE = 17;
+  int PUBLIC = 17;
   /** RegularExpression Id. */
-  int Bool = 18;
+  int clase = 18;
   /** RegularExpression Id. */
-  int integer = 19;
+  int PRIVATE = 19;
   /** RegularExpression Id. */
-  int Dou = 20;
+  int Bool = 20;
   /** RegularExpression Id. */
-  int St = 21;
+  int integer = 21;
   /** RegularExpression Id. */
-  int Ch = 22;
+  int Dou = 22;
   /** RegularExpression Id. */
-  int If = 23;
+  int St = 23;
   /** RegularExpression Id. */
-  int Boolean = 24;
+  int Ch = 24;
   /** RegularExpression Id. */
-  int Int = 25;
+  int If = 25;
   /** RegularExpression Id. */
-  int UNKNOWN = 26;
+  int Boolean = 26;
   /** RegularExpression Id. */
-  int IDENTIFIER = 27;
+  int Int = 27;
   /** RegularExpression Id. */
-  int Char = 28;
+  int UNKNOWN = 28;
   /** RegularExpression Id. */
-  int String = 29;
+  int IDENTIFIER = 29;
   /** RegularExpression Id. */
-  int Double = 30;
+  int Char = 30;
+  /** RegularExpression Id. */
+  int String = 31;
+  /** RegularExpression Id. */
+  int Double = 32;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -86,6 +90,8 @@ public interface compConstants {
     "\"=\"",
     "\"+\"",
     "\"-\"",
+    "\"*\"",
+    "\"/\"",
     "\"(\"",
     "\")\"",
     "\"{\"",

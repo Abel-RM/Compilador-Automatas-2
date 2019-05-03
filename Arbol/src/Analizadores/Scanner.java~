@@ -1,0 +1,446 @@
+package Analizadores;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.PrintStream;
+import java.io.Reader;
+import java_cup.runtime.Symbol;
+
+public class Scanner
+  implements java_cup.runtime.Scanner
+ {
+  public static final int YYEOF = -1;
+   private static final int ZZ_BUFFERSIZE = 16384;
+   public static final int YYINITIAL = 0;
+/*  32 */   private static final int[] ZZ_LEXSTATE = { 0, 0 };
+/*     */   private static final String ZZ_CMAP_PACKED = "";
+/*  47 */   private static final char[] ZZ_CMAP = zzUnpackCMap("");
+/*     */ 
+/*  52 */   private static final int[] ZZ_ACTION = zzUnpackAction();
+/*     */   private static final String ZZ_ACTION_PACKED_0 = "";
+/*  81 */   private static final int[] ZZ_ROWMAP = zzUnpackRowMap();
+/*     */   private static final String ZZ_ROWMAP_PACKED_0 = "";
+/* 108 */   private static final int[] ZZ_TRANS = zzUnpackTrans();
+/*     */   private static final String ZZ_TRANS_PACKED_0 = "";
+/*     */   private static final int ZZ_UNKNOWN_ERROR = 0;
+/*     */   private static final int ZZ_NO_MATCH = 1;
+/*     */   private static final int ZZ_PUSHBACK_2BIG = 2;
+/* 141 */   private static final String[] ZZ_ERROR_MSG = { "Unkown internal scanner error", "Error: could not match input", "Error: pushback value was too large" };
+/*     */ 
+/* 150 */   private static final int[] ZZ_ATTRIBUTE = zzUnpackAttribute();
+/*     */   private static final String ZZ_ATTRIBUTE_PACKED_0 = "";
+/*     */   private Reader zzReader;
+/*     */   private int zzState;
+/* 181 */   private int zzLexicalState = 0;
+/*     */ 
+/* 185 */   private char[] zzBuffer = new char[16384];
+/*     */   private int zzMarkedPos;
+/*     */   private int zzCurrentPos;
+/*     */   private int zzStartRead;
+/*     */   private int zzEndRead;
+/*     */   private int yyline;
+/*     */   private int yychar;
+/*     */   private int yycolumn;
+/* 215 */   private boolean zzAtBOL = true;
+/*     */   private boolean zzAtEOF;
+/*     */   private boolean zzEOFDone;
+/*     */ 
+/*     */   private static int[] zzUnpackAction()
+/*     */   {
+/*  59 */     int[] result = new int[11];
+/*  60 */     int offset = 0;
+/*  61 */     offset = zzUnpackAction("", offset, result);
+/*  62 */     return result;
+/*     */   }
+/*     */ 
+/*     */   private static int zzUnpackAction(String packed, int offset, int[] result) {
+/*  66 */     int i = 0;
+/*  67 */     int j = offset;
+/*  68 */     int l = packed.length();
+/*  69 */     while (i < l) {
+/*  70 */       int count = packed.charAt(i++);
+/*  71 */       int value = packed.charAt(i++);
+/*     */       do { result[(j++)] = value; count--; } while (count > 0);
+/*     */     }
+/*  74 */     return j;
+/*     */   }
+/*     */ 
+/*     */   private static int[] zzUnpackRowMap()
+/*     */   {
+/*  88 */     int[] result = new int[11];
+/*  89 */     int offset = 0;
+/*  90 */     offset = zzUnpackRowMap("", offset, result);
+/*  91 */     return result;
+/*     */   }
+/*     */ 
+/*     */   private static int zzUnpackRowMap(String packed, int offset, int[] result) {
+/*  95 */     int i = 0;
+/*  96 */     int j = offset;
+/*  97 */     int l = packed.length();
+/*  98 */     while (i < l) {
+/*  99 */       int high = packed.charAt(i++) << '\020';
+/* 100 */       result[(j++)] = (high | packed.charAt(i++));
+/*     */     }
+/* 102 */     return j;
+/*     */   }
+/*     */ 
+/*     */   private static int[] zzUnpackTrans()
+/*     */   {
+/* 115 */     int[] result = new int[40];
+/* 116 */     int offset = 0;
+/* 117 */     offset = zzUnpackTrans("", offset, result);
+/* 118 */     return result;
+/*     */   }
+/*     */ 
+/*     */   private static int zzUnpackTrans(String packed, int offset, int[] result) {
+/* 122 */     int i = 0;
+/* 123 */     int j = offset;
+/* 124 */     int l = packed.length();
+/* 125 */     while (i < l) {
+/* 126 */       int count = packed.charAt(i++);
+/* 127 */       int value = packed.charAt(i++);
+/* 128 */       value--;
+/*     */       do { result[(j++)] = value; count--; } while (count > 0);
+/*     */     }
+/* 131 */     return j;
+/*     */   }
+/*     */ 
+/*     */   private static int[] zzUnpackAttribute()
+/*     */   {
+/* 156 */     int[] result = new int[11];
+/* 157 */     int offset = 0;
+/* 158 */     offset = zzUnpackAttribute("", offset, result);
+/* 159 */     return result;
+/*     */   }
+/*     */ 
+/*     */   private static int zzUnpackAttribute(String packed, int offset, int[] result) {
+/* 163 */     int i = 0;
+/* 164 */     int j = offset;
+/* 165 */     int l = packed.length();
+/* 166 */     while (i < l) {
+/* 167 */       int count = packed.charAt(i++);
+/* 168 */       int value = packed.charAt(i++);
+/*     */       do { result[(j++)] = value; count--; } while (count > 0);
+/*     */     }
+/* 171 */     return j;
+/*     */   }
+/*     */ 
+/*     */   public Scanner(Reader in)
+/*     */   {
+/* 236 */     this.zzReader = in;
+/*     */   }
+/*     */ 
+/*     */   public Scanner(InputStream in)
+/*     */   {
+/* 246 */     this(new InputStreamReader(in));
+/*     */   }
+/*     */ 
+/*     */   private static char[] zzUnpackCMap(String packed)
+/*     */   {
+/* 256 */     char[] map = new char[65536];
+/* 257 */     int i = 0;
+/* 258 */     int j = 0;
+/* 259 */     while (i < 60) {
+/* 260 */       int count = packed.charAt(i++);
+/* 261 */       char value = packed.charAt(i++);
+/*     */       do { map[(j++)] = value; count--; } while (count > 0);
+/*     */     }
+/* 264 */     return map;
+/*     */   }
+/*     */ 
+/*     */   private boolean zzRefill()
+/*     */     throws IOException
+/*     */   {
+/* 278 */     if (this.zzStartRead > 0) {
+/* 279 */       System.arraycopy(this.zzBuffer, this.zzStartRead, this.zzBuffer, 0, this.zzEndRead - this.zzStartRead);
+/*     */ 
+/* 284 */       this.zzEndRead -= this.zzStartRead;
+/* 285 */       this.zzCurrentPos -= this.zzStartRead;
+/* 286 */       this.zzMarkedPos -= this.zzStartRead;
+/* 287 */       this.zzStartRead = 0;
+/*     */     }
+/*     */ 
+/* 291 */     if (this.zzCurrentPos >= this.zzBuffer.length)
+/*     */     {
+/* 293 */       char[] newBuffer = new char[this.zzCurrentPos * 2];
+/* 294 */       System.arraycopy(this.zzBuffer, 0, newBuffer, 0, this.zzBuffer.length);
+/* 295 */       this.zzBuffer = newBuffer;
+/*     */     }
+/*     */ 
+/* 299 */     int numRead = this.zzReader.read(this.zzBuffer, this.zzEndRead, this.zzBuffer.length - this.zzEndRead);
+/*     */ 
+/* 302 */     if (numRead > 0) {
+/* 303 */       this.zzEndRead += numRead;
+/* 304 */       return false;
+/*     */     }
+/*     */ 
+/* 307 */     if (numRead == 0) {
+/* 308 */       int c = this.zzReader.read();
+/* 309 */       if (c == -1) {
+/* 310 */         return true;
+/*     */       }
+/* 312 */       this.zzBuffer[(this.zzEndRead++)] = (char)c;
+/* 313 */       return false;
+/*     */     }
+/*     */ 
+/* 318 */     return true;
+/*     */   }
+/*     */ 
+/*     */   public final void yyclose()
+/*     */     throws IOException
+/*     */   {
+/* 326 */     this.zzAtEOF = true;
+/* 327 */     this.zzEndRead = this.zzStartRead;
+/*     */ 
+/* 329 */     if (this.zzReader != null)
+/* 330 */       this.zzReader.close();
+/*     */   }
+/*     */ 
+/*     */   public final void yyreset(Reader reader)
+/*     */   {
+/* 345 */     this.zzReader = reader;
+/* 346 */     this.zzAtBOL = true;
+/* 347 */     this.zzAtEOF = false;
+/* 348 */     this.zzEOFDone = false;
+/* 349 */     this.zzEndRead = (this.zzStartRead = 0);
+/* 350 */     this.zzCurrentPos = (this.zzMarkedPos = 0);
+/* 351 */     this.yyline = (this.yychar = this.yycolumn = 0);
+/* 352 */     this.zzLexicalState = 0;
+/*     */   }
+/*     */ 
+/*     */   public final int yystate()
+/*     */   {
+/* 360 */     return this.zzLexicalState;
+/*     */   }
+/*     */ 
+/*     */   public final void yybegin(int newState)
+/*     */   {
+/* 370 */     this.zzLexicalState = newState;
+/*     */   }
+/*     */ 
+/*     */   public final String yytext()
+/*     */   {
+/* 378 */     return new String(this.zzBuffer, this.zzStartRead, this.zzMarkedPos - this.zzStartRead);
+/*     */   }
+/*     */ 
+/*     */   public final char yycharat(int pos)
+/*     */   {
+/* 394 */     return this.zzBuffer[(this.zzStartRead + pos)];
+/*     */   }
+/*     */ 
+/*     */   public final int yylength()
+/*     */   {
+/* 402 */     return this.zzMarkedPos - this.zzStartRead;
+/*     */   }
+/*     */ 
+/*     */   private void zzScanError(int errorCode)
+/*     */   {
+/*     */     String message;
+/*     */     try
+/*     */     {
+/* 423 */       message = ZZ_ERROR_MSG[errorCode];
+/*     */     }
+/*     */     catch (ArrayIndexOutOfBoundsException e) {
+/* 426 */       message = ZZ_ERROR_MSG[0];
+/*     */     }
+/*     */ 
+/* 429 */     throw new Error(message);
+/*     */   }
+/*     */ 
+/*     */   public void yypushback(int number)
+/*     */   {
+/* 442 */     if (number > yylength()) {
+/* 443 */       zzScanError(2);
+/*     */     }
+/* 445 */     this.zzMarkedPos -= number;
+/*     */   }
+/*     */ 
+/*     */   private void zzDoEOF()
+/*     */     throws IOException
+/*     */   {
+/* 454 */     if (!this.zzEOFDone) {
+/* 455 */       this.zzEOFDone = true;
+/* 456 */       yyclose();
+/*     */     }
+/*     */   }
+/*     */ 
+/*     */   public Symbol next_token()
+/*     */     throws IOException
+/*     */   {
+/* 475 */     int zzEndReadL = this.zzEndRead;
+/* 476 */     char[] zzBufferL = this.zzBuffer;
+/* 477 */     char[] zzCMapL = ZZ_CMAP;
+/*     */ 
+/* 479 */     int[] zzTransL = ZZ_TRANS;
+/* 480 */     int[] zzRowMapL = ZZ_ROWMAP;
+/* 481 */     int[] zzAttrL = ZZ_ATTRIBUTE;
+/*     */     while (true)
+/*     */     {
+/* 484 */       int zzMarkedPosL = this.zzMarkedPos;
+/*     */ 
+/* 486 */       boolean zzR = false;
+/* 487 */       for (int zzCurrentPosL = this.zzStartRead; zzCurrentPosL < zzMarkedPosL; )
+/*     */       {
+/* 489 */         switch (zzBufferL[zzCurrentPosL]) {
+/*     */         case '\013':
+/*     */         case '\f':
+/*     */         case '':
+/*     */         case ' ':
+/*     */         case ' ':
+/* 495 */           this.yyline += 1;
+/* 496 */           this.yycolumn = 0;
+/* 497 */           zzR = false;
+/* 498 */           break;
+/*     */         case '\r':
+/* 500 */           this.yyline += 1;
+/* 501 */           this.yycolumn = 0;
+/* 502 */           zzR = true;
+/* 503 */           break;
+/*     */         case '\n':
+/* 505 */           if (zzR) {
+/* 506 */             zzR = false;
+/*     */           } else {
+/* 508 */             this.yyline += 1;
+/* 509 */             this.yycolumn = 0;
+/*     */           }
+/* 511 */           break;
+/*     */         default:
+/* 513 */           zzR = false;
+/* 514 */           this.yycolumn += 1;
+/*     */         }
+/* 488 */         zzCurrentPosL++;
+/*     */       }
+/*     */ 
+/* 518 */       if (zzR)
+/*     */       {
+/*     */         boolean zzPeek;
+/*     */         boolean zzPeek;
+/* 521 */         if (zzMarkedPosL < zzEndReadL) {
+/* 522 */           zzPeek = zzBufferL[zzMarkedPosL] == '\n';
+/*     */         }
+/*     */         else
+/*     */         {
+/*     */           boolean zzPeek;
+/* 523 */           if (this.zzAtEOF) {
+/* 524 */             zzPeek = false;
+/*     */           } else {
+/* 526 */             boolean eof = zzRefill();
+/* 527 */             zzEndReadL = this.zzEndRead;
+/* 528 */             zzMarkedPosL = this.zzMarkedPos;
+/* 529 */             zzBufferL = this.zzBuffer;
+/*     */             boolean zzPeek;
+/* 530 */             if (eof)
+/* 531 */               zzPeek = false;
+/*     */             else
+/* 533 */               zzPeek = zzBufferL[zzMarkedPosL] == '\n'; 
+/*     */           }
+/*     */         }
+/* 535 */         if (zzPeek) this.yyline -= 1;
+/*     */       }
+/* 537 */       int zzAction = -1;
+/*     */ 
+/* 539 */       zzCurrentPosL = this.zzCurrentPos = this.zzStartRead = zzMarkedPosL;
+/*     */ 
+/* 541 */       this.zzState = ZZ_LEXSTATE[this.zzLexicalState];
+/*     */       int zzInput;
+/*     */       while (true)
+/*     */       {
+/*     */         int zzInput;
+/* 547 */         if (zzCurrentPosL < zzEndReadL) {
+/* 548 */           zzInput = zzBufferL[(zzCurrentPosL++)]; } else {
+/* 549 */           if (this.zzAtEOF) {
+/* 550 */             int zzInput = -1;
+/* 551 */             break;
+/*     */           }
+/*     */ 
+/* 555 */           this.zzCurrentPos = zzCurrentPosL;
+/* 556 */           this.zzMarkedPos = zzMarkedPosL;
+/* 557 */           boolean eof = zzRefill();
+/*     */ 
+/* 559 */           zzCurrentPosL = this.zzCurrentPos;
+/* 560 */           zzMarkedPosL = this.zzMarkedPos;
+/* 561 */           zzBufferL = this.zzBuffer;
+/* 562 */           zzEndReadL = this.zzEndRead;
+/* 563 */           if (eof) {
+/* 564 */             int zzInput = -1;
+/* 565 */             break;
+/*     */           }
+/*     */ 
+/* 568 */           zzInput = zzBufferL[(zzCurrentPosL++)];
+/*     */         }
+/*     */ 
+/* 571 */         int zzNext = zzTransL[(zzRowMapL[this.zzState] + zzCMapL[zzInput])];
+/* 572 */         if (zzNext == -1) break;
+/* 573 */         this.zzState = zzNext;
+/*     */ 
+/* 575 */         int zzAttributes = zzAttrL[this.zzState];
+/* 576 */         if ((zzAttributes & 0x1) == 1) {
+/* 577 */           zzAction = this.zzState;
+/* 578 */           zzMarkedPosL = zzCurrentPosL;
+/* 579 */           if ((zzAttributes & 0x8) == 8)
+/*     */           {
+/*     */             break;
+/*     */           }
+/*     */         }
+/*     */       }
+/*     */ 
+/* 586 */       this.zzMarkedPos = zzMarkedPosL;
+/*     */ 
+/* 588 */       switch (zzAction < 0 ? zzAction : ZZ_ACTION[zzAction]) {
+/*     */       case 1:
+/* 590 */         System.out.println("Error Lexico -> Simbolo: \"" + yytext() + "\" Linea: " + (this.yyline + 1) + " Columna: " + (this.yycolumn + 1));
+/*     */       case 11:
+/* 592 */         break;
+/*     */       case 5:
+/* 594 */         return new Symbol(5, this.yycolumn + 1, this.yyline + 1, new String(yytext()));
+/*     */       case 12:
+/* 596 */         break;
+/*     */       case 10:
+/*     */       case 13:
+/* 600 */         break;
+/*     */       case 6:
+/* 602 */         return new Symbol(6, this.yycolumn + 1, this.yyline + 1, new String(yytext()));
+/*     */       case 14:
+/* 604 */         break;
+/*     */       case 8:
+/* 606 */         return new Symbol(10, this.yycolumn + 1, this.yyline + 1, new String(yytext()));
+/*     */       case 15:
+/* 608 */         break;
+/*     */       case 9:
+/* 610 */         return new Symbol(8, this.yycolumn + 1, this.yyline + 1, new String(yytext()));
+/*     */       case 16:
+/* 612 */         break;
+/*     */       case 4:
+/* 614 */         return new Symbol(3, this.yycolumn + 1, this.yyline + 1, new String(yytext()));
+/*     */       case 17:
+/* 616 */         break;
+/*     */       case 7:
+/* 618 */         return new Symbol(9, this.yycolumn + 1, this.yyline + 1, new String(yytext()));
+/*     */       case 18:
+/* 620 */         break;
+/*     */       case 3:
+/* 622 */         return new Symbol(4, this.yycolumn + 1, this.yyline + 1, new String(yytext()));
+/*     */       case 19:
+/* 624 */         break;
+/*     */       case 2:
+/* 626 */         return new Symbol(2, this.yycolumn + 1, this.yyline + 1, new String(yytext()));
+/*     */       case 20:
+/* 628 */         break;
+/*     */       default:
+/* 630 */         if ((zzInput == -1) && (this.zzStartRead == this.zzCurrentPos)) {
+/* 631 */           this.zzAtEOF = true;
+/* 632 */           zzDoEOF();
+/* 633 */           return new Symbol(0);
+/*     */         }
+/*     */ 
+/* 636 */         zzScanError(1);
+/*     */       }
+/*     */     }
+/*     */   }
+/*     */ }
+
+/* Location:           C:\Users\PC\Desktop\Arboles.jar
+ * Qualified Name:     Analizadores.Scanner
+ * JD-Core Version:    0.6.0
+ */

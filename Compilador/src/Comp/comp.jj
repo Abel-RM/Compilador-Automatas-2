@@ -3,6 +3,7 @@ package Comp;
 import java.io.*;
 class comp 
 {
+	static String exp="";
 	static String nombre;
 	static String tipo;
 	static String atributo;
@@ -35,6 +36,8 @@ TOKEN:
 	| <Asignacion: "=" >//7
 	| <Mas : "+" >//8
 	| <Menos:"-">//9
+	| <Mul : "*" >//8
+	| <Div:"/">//9
     | <ParAP: "(" >//10
 	| <ParCi: ")" > //11
 	| <Izq: "{" >//12
@@ -51,11 +54,12 @@ TOKEN:
 	| <If : "if"> //21
 	| <Boolean : "boolean"> //22
 	| <Int : (["0"-"9"])+>//23
-	| <UNKNOWN : ((("'"|"\"")(["a"-"z","A"-"Z","_","0"-"9"])+)|((["a"-"z","A"-"Z","_","0"-"9"])+)("'"|"\""))|("/"|"*") > //24
-	| <IDENTIFIER : (["a"-"z","A"-"Z","_","0"-"9"])+ > //24
+	| <UNKNOWN : ((("'"|"\"")(["a"-"z","A"-"Z","_","0"-"9"])+)|((["a"-"z","A"-"Z","_","0"-"9"])+)("'"|"\""))|("/"|"*")>
+	| <IDENTIFIER : (["a"-"z","A"-"Z","_"])+  > //24
 	| <Char : "'"["a"-"z","A"-"Z","0"-"9"]"'" >//52 
 	| <String : ["\""]["a"-"z","A"-"Z","0"-"9"," "](["a"-"z","A"-"Z","0"-"9"," ",":",";","."])*["\""]> //51
-	| <Double : (["0"-"9"])+["."](["0"-"9"])+ > //50	
+	| <Double : (["0"-"9"])+["."](["0"-"9"])+ > //50		
+	
 	
 
 }
@@ -262,10 +266,17 @@ void statement_block():
 	
 	 
 }
+void par():
+{}
+{	
+		<ParAP>|<ParCi>
+			 		 
+}
 void aritmetica_expression():
 {}
 {	
 		identi()
+		({Ventana.ex=token.image;})
 		({			
 			if(!Ventana.tabla.containsKey(token.image)){	
 				Simbolo k = new Simbolo();
@@ -274,7 +285,8 @@ void aritmetica_expression():
 			}
 		})
 		<Asignacion>
-		opint()
+		
+		(LOOKAHEAD(2)opint()|LOOKAHEAD(2)op()|par()({exp=exp+token.image;}))+
 		<SEMICOLON>			 
 }
 void identi():
@@ -283,11 +295,15 @@ void identi():
 	<IDENTIFIER>	
 			 		 
 }
+
+
+
 void opint():
 {}
 {
-		(<Int>|identi()
-		({			
+		(<Int>({exp=exp+token.image;})|identi()
+		({		
+			exp=exp+token.image;	
 			if(!Ventana.tabla.containsKey(token.image)){			
 				Simbolo k = new Simbolo();
 				k=Ventana.buscarNoDecNum(token.image);
@@ -296,9 +312,12 @@ void opint():
 		})
 		)
 		
-		(<Mas>|<Menos>)
-		(<Int>|identi()
-		({			
+		(<Mas>({exp=exp+token.image;})|<Menos>({exp=exp+token.image;})|<Mul>({exp=exp+token.image;})|<Div>({exp=exp+token.image;})|par()({exp=exp+token.image;}))+
+		
+
+		(<Int>({exp=exp+token.image;})|identi()
+		({		
+			exp=exp+token.image;	
 			if(!Ventana.tabla.containsKey(token.image)){				
 				Simbolo k = new Simbolo();
 				k=Ventana.buscarNoDecNumD(token.image);
@@ -308,10 +327,30 @@ void opint():
 		)
 
 }
+
+void op():
+{}
+{		
+		(<Mas>({exp=exp+token.image;})|<Menos>({exp=exp+token.image;})|<Mul>({exp=exp+token.image;})|<Div>({exp=exp+token.image;})|par()({exp=exp+token.image;}))+
+		(<Int>({exp=exp+token.image;})|identi()
+		({		
+			exp=exp+token.image;	
+			if(!Ventana.tabla.containsKey(token.image)){				
+				Simbolo k = new Simbolo();
+				k=Ventana.buscarNoDecNumD(token.image);
+				Ventana.noDeclarada +="error: variable  "+token.image+" at "+k.getPosicion()+" was not declarated\n";
+			}
+		})	
+		)
+		
+}
+
+
 void asignation():
 {}
 {		
 	identi()
+	({Ventana.ex=token.image;})
 	<Asignacion>
 	(<Int>|<Bool>)
 	<SEMICOLON>	
